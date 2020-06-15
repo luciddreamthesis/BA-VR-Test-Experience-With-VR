@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CylinderController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public Transform B;
+    public Transform TargetPoint;
     public bool isMoving = false;
 
-    float speed = 10.0f;
+    float speed = 1.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +21,7 @@ public class CylinderController : MonoBehaviour
         var step = speed * Time.deltaTime;
         if (isMoving) ;
         {
-            transform.position = Vector3.MoveTowards(transform.position, B.position, step);
+            transform.position = Vector3.MoveTowards(transform.position, TargetPoint.position, step);
         }
     }
 }
