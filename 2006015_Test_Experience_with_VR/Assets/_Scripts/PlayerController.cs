@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     public Transform TargetPoint;
     public bool isMoving = false;
 
-    float speed = 1.0f;
+    float speed = 3.5f;
     // Start is called before the first frame update
     void Start()
     {
