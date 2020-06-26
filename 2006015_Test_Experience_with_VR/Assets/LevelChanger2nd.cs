@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelChanger : MonoBehaviour
+public class LevelChanger2nd : MonoBehaviour
 {
     public Animator animator;
 
@@ -10,21 +10,21 @@ public class LevelChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Invoke("goToSecondScene", 16);
+        Invoke("goToThirdScene", 5);
     }
 
-    public void goToSecondScene ()
+    public void goToThirdScene()
     {
-        FadeToLevel(1);
+        FadeToLevel(2);
     }
 
-    public void FadeToLevel (int levelIndex)
+    public void FadeToLevel(int levelIndex)
     {
         levelToLoad = levelIndex;
         animator.SetTrigger("FadeOut");
     }
 
-    public void OnFadeComplete ()
+    public void OnFadeComplete()
     {
         SceneManager.LoadScene(levelToLoad);
     }
