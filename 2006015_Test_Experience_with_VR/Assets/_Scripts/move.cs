@@ -24,7 +24,7 @@ public class move : MonoBehaviour
     {
       Vector3 v = new Vector3(0,0,0);
       v.x = Random.Range(-100, 100);
-      v.y = Random.Range(-100, 100);
+      v.y = Random.Range(-100, 20);
       v.z = Random.Range(-100, 100);
       return v;
     }
