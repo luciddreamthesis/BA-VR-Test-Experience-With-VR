@@ -110,7 +110,7 @@ public class WebSocketParser : MonoBehaviour {
             float newFocus = float.Parse(response.met[1]);
 
 
-            if(newFocus > 0.1){
+            if(newFocus>0.5){
                 Vector3 startPos = sphereFocus.transform.position;
                 
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
@@ -127,6 +127,7 @@ public class WebSocketParser : MonoBehaviour {
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
                 lastFocusValue = newFocus;
             }
+
             else
             {
                 Debug.Log("focus down" + newFocus);
@@ -135,7 +136,8 @@ public class WebSocketParser : MonoBehaviour {
         }
   }
 
-    void Authorize(){
+
+void Authorize(){
         WebSocketData.AuthParameter p = new WebSocketData.AuthParameter();
         p.clientId = "ZFDADBiG5lri14hJjNMQSaXdooyu3x8pPDGgEbCe";
         p.clientSecret = "EiZeIaY2fAbyIeEtsbI2yjwlDuiG0WaEPpNShBC3ctnuGDMEdzULTewbIfvTY7fHguSGHjvdFcL5YZ8rFZemT8vXuSTk7IlYia2LsERvt5HS3jwNOvXpa7mzvyQXBcfO";
