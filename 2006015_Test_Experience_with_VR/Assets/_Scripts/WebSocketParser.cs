@@ -156,16 +156,20 @@ void Authorize(){
         SendMethodSession("createSession", p);
     }
 
-    void Subscribe(string type, string cortexToken, string sessionId)
-    {
 
-        WebSocketData.SubscribeParameter p = new WebSocketData.SubscribeParameter();
-        p.cortexToken = cortexToken;
-        p.session = sessionId;
-        p.streams.Add(type);
-        Debug.Log("subscribing");
-        SendMethodSubscribe("subscribe", p);
-    }
+
+        void Subscribe(string type, string cortexToken, string sessionId)
+        {
+
+            WebSocketData.SubscribeParameter p = new WebSocketData.SubscribeParameter();
+            p.cortexToken = cortexToken;
+            p.session = sessionId;
+            p.streams.Add(type);
+            Debug.Log("subscribing");
+            SendMethodSubscribe("subscribe", p);
+        }
+   
+    
 
     void GetUserLogin(){
         SendMethod("getUserLogin", null);
