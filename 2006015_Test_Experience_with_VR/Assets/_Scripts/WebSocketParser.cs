@@ -9,10 +9,12 @@ public class WebSocketParser : MonoBehaviour {
 
     public WebSocket ws;
 
+    public AudioSource playSound;
+
     public delegate void OnConnected();
     public OnConnected OnConnect;
     private float x = 0.0f;
-    private float lastFocusValue =0;
+    //private float lastFocusValue =0;
     private string auth; // = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6ImNvbS5taW1pLnlvcmQubHVjaWQtZHJlYW0iLCJhcHBWZXJzaW9uIjoiMS4wIiwiZXhwIjoxNTkyMDMyNDcyLCJuYmYiOjE1OTE3NzMyNzIsInVzZXJJZCI6ImFhN2E2NDI2LTUxMTAtNDc4Yy04OTFhLWYwMzlmZTlhNmEyNCIsInVzZXJuYW1lIjoibWltaS55b3JkIiwidmVyc2lvbiI6IjIuMCJ9.QNiWXsslXYqaK3wJ/aSTO6geF35jckzgJWWPC/h3AFA=";
 
     private Queue responseData;
@@ -104,33 +106,32 @@ public class WebSocketParser : MonoBehaviour {
             //if(response.mot.Count>0){
             //sphere.transform.position = new Vector3(float.Parse(response.mot[7]), float.Parse(response.mot[8]), float.Parse(response.mot[9]));
             //}
-            Debug.Log (response.met[1]);
+            Debug.Log (response.met[18]);
 
+            float newFocus = float.Parse(response.met[18]);
 
-            float newFocus = float.Parse(response.met[1]);
-
-
-            if(newFocus>0.5){
+    
+                if (newFocus>0.3){
                 Vector3 startPos = sphereFocus.transform.position;
                 
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
 
-                
+                //playSound.Play();
 
                 System.Action<ITween<Vector3>> sphereMovement = (t) =>
                 {
                     sphereFocus.transform.position = t.CurrentValue;
                 };
 
-
                 // completion defaults to null if not passed in
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
-                lastFocusValue = newFocus;
-            }
+                //lastFocusValue = newFocus;
+                }
 
-            else
+            else 
             {
-                Debug.Log("focus down" + newFocus);
+                Debug.Log("focus down");
+
             }
             // csvExporter.WriteEEGData(response);
         }
