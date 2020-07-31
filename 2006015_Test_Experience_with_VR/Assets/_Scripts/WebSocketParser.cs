@@ -5,16 +5,15 @@ using WebSocketSharp;
 using System;
 using System.IO;
 using DigitalRuby.Tween;
-public class WebSocketParser : MonoBehaviour {
+public class WebSocketParser : MonoBehaviour
+{
 
     public WebSocket ws;
-
-    public AudioSource playSound;
 
     public delegate void OnConnected();
     public OnConnected OnConnect;
     private float x = 0.0f;
-    //private float lastFocusValue =0;
+    private float lastFocusValue = 0;
     private string auth; // = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6ImNvbS5taW1pLnlvcmQubHVjaWQtZHJlYW0iLCJhcHBWZXJzaW9uIjoiMS4wIiwiZXhwIjoxNTkyMDMyNDcyLCJuYmYiOjE1OTE3NzMyNzIsInVzZXJJZCI6ImFhN2E2NDI2LTUxMTAtNDc4Yy04OTFhLWYwMzlmZTlhNmEyNCIsInVzZXJuYW1lIjoibWltaS55b3JkIiwidmVyc2lvbiI6IjIuMCJ9.QNiWXsslXYqaK3wJ/aSTO6geF35jckzgJWWPC/h3AFA=";
 
     private Queue responseData;
@@ -41,7 +40,7 @@ public class WebSocketParser : MonoBehaviour {
     //public CSVExporter csvExporter;
 
     // Use this for initialization
-    public void Main ()
+    public void Main()
     {
 
         responseData = new Queue();
@@ -55,7 +54,7 @@ public class WebSocketParser : MonoBehaviour {
 
         var url = wsUri.Uri;
 
-        Debug.Log("Opening Websocket Interaction connection to " + url.AbsoluteUri.Substring(0,url.AbsoluteUri.Length-1));
+        Debug.Log("Opening Websocket Interaction connection to " + url.AbsoluteUri.Substring(0, url.AbsoluteUri.Length - 1));
         ws = new WebSocket(url.AbsoluteUri.Substring(0, url.AbsoluteUri.Length - 1));
 
         ws.OnOpen += (sender, evt) => {
@@ -90,55 +89,63 @@ public class WebSocketParser : MonoBehaviour {
             //Debug.Log(response.result);
             WebSocketData.Response responseRaw = JsonUtility.FromJson<WebSocketData.Response>(responseString);
 
-            if(!String.IsNullOrEmpty(responseRaw.result.cortexToken)) {
-              cortexToken = responseRaw.result.cortexToken;
-              Debug.Log("cortexToken is: " + cortexToken);
-              CreateSession(cortexToken);
+            if (!String.IsNullOrEmpty(responseRaw.result.cortexToken))
+            {
+                cortexToken = responseRaw.result.cortexToken;
+                Debug.Log("cortexToken is: " + cortexToken);
+                CreateSession(cortexToken);
             }
 
-            if(!String.IsNullOrEmpty(responseRaw.result.id)) {
-              // string sessionId = responseRaw.result.id;
-              Debug.Log("session id is: " + responseRaw.result.id);
-              Subscribe("met", cortexToken, responseRaw.result.id);
-            //  Subscribe("met", cortexToken, responseRaw.result.id);
+            if (!String.IsNullOrEmpty(responseRaw.result.id))
+            {
+                // string sessionId = responseRaw.result.id;
+                Debug.Log("session id is: " + responseRaw.result.id);
+                Subscribe("met", cortexToken, responseRaw.result.id);
+                //  Subscribe("met", cortexToken, responseRaw.result.id);
             }
 
             //if(response.mot.Count>0){
             //sphere.transform.position = new Vector3(float.Parse(response.mot[7]), float.Parse(response.mot[8]), float.Parse(response.mot[9]));
             //}
-            Debug.Log (response.met[18]);
+            Debug.Log(response.met[18]);
+
 
             float newFocus = float.Parse(response.met[18]);
 
-    
-                if (newFocus>0.3){
+
+            if (newFocus > 0.1)
+            {
+                Debug.Log("animation start");
                 Vector3 startPos = sphereFocus.transform.position;
-                
+
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
 
-                //playSound.Play();
+
 
                 System.Action<ITween<Vector3>> sphereMovement = (t) =>
                 {
                     sphereFocus.transform.position = t.CurrentValue;
                 };
 
+
                 // completion defaults to null if not passed in
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
-                //lastFocusValue = newFocus;
-                }
+                lastFocusValue = newFocus;
+                Debug.Log("animation stops");
+            }
 
+            
             else 
             {
-                Debug.Log("focus down");
-
+             
+                Debug.Log("focus down" + newFocus);
             }
             // csvExporter.WriteEEGData(response);
         }
-  }
+    }
 
-
-void Authorize(){
+    void Authorize()
+    {
         WebSocketData.AuthParameter p = new WebSocketData.AuthParameter();
         p.clientId = "ZFDADBiG5lri14hJjNMQSaXdooyu3x8pPDGgEbCe";
         p.clientSecret = "EiZeIaY2fAbyIeEtsbI2yjwlDuiG0WaEPpNShBC3ctnuGDMEdzULTewbIfvTY7fHguSGHjvdFcL5YZ8rFZemT8vXuSTk7IlYia2LsERvt5HS3jwNOvXpa7mzvyQXBcfO";
@@ -147,7 +154,8 @@ void Authorize(){
 
 
 
-    void CreateSession(string cortexToken){
+    void CreateSession(string cortexToken)
+    {
 
         WebSocketData.SessionParameter p = new WebSocketData.SessionParameter();
         p.cortexToken = cortexToken;
@@ -157,33 +165,32 @@ void Authorize(){
         SendMethodSession("createSession", p);
     }
 
+    void Subscribe(string type, string cortexToken, string sessionId)
+    {
 
+        WebSocketData.SubscribeParameter p = new WebSocketData.SubscribeParameter();
+        p.cortexToken = cortexToken;
+        p.session = sessionId;
+        p.streams.Add(type);
+        Debug.Log("subscribing");
+        SendMethodSubscribe("subscribe", p);
+    }
 
-        void Subscribe(string type, string cortexToken, string sessionId)
-        {
-
-            WebSocketData.SubscribeParameter p = new WebSocketData.SubscribeParameter();
-            p.cortexToken = cortexToken;
-            p.session = sessionId;
-            p.streams.Add(type);
-            Debug.Log("subscribing");
-            SendMethodSubscribe("subscribe", p);
-        }
-   
-    
-
-    void GetUserLogin(){
+    void GetUserLogin()
+    {
         SendMethod("getUserLogin", null);
     }
 
-    void SendLogout(){
+    void SendLogout()
+    {
 
         WebSocketData.Parameter p = new WebSocketData.Parameter();
         p.username = "mimi.yord";
         SendMethod("logout", p);
     }
 
-    void SendLogin(){
+    void SendLogin()
+    {
 
 
         WebSocketData.Parameter p = new WebSocketData.Parameter();
@@ -197,7 +204,8 @@ void Authorize(){
 
     }
 
-    void SendMethodSubscribe(string methodName, WebSocketData.SubscribeParameter parameter){
+    void SendMethodSubscribe(string methodName, WebSocketData.SubscribeParameter parameter)
+    {
         WebSocketData.MethodSubscribe method = new WebSocketData.MethodSubscribe();
         method.method = methodName;
         method.@params = parameter;
@@ -205,7 +213,8 @@ void Authorize(){
         ws.Send(JsonUtility.ToJson(method));
     }
 
-    void SendMethod(string methodName, WebSocketData.Parameter parameter){
+    void SendMethod(string methodName, WebSocketData.Parameter parameter)
+    {
         WebSocketData.Method method = new WebSocketData.Method();
         method.method = methodName;
         method.@params = parameter;
@@ -213,14 +222,16 @@ void Authorize(){
         ws.Send(JsonUtility.ToJson(method));
     }
 
-    void SendMethodAuth(string methodName, WebSocketData.AuthParameter parameter){
+    void SendMethodAuth(string methodName, WebSocketData.AuthParameter parameter)
+    {
         WebSocketData.MethodAuth method = new WebSocketData.MethodAuth();
         method.method = methodName;
         method.@params = parameter;
         Debug.Log("method" + JsonUtility.ToJson(method));
         ws.Send(JsonUtility.ToJson(method));
     }
-    void SendMethodSession(string methodName, WebSocketData.SessionParameter parameter){
+    void SendMethodSession(string methodName, WebSocketData.SessionParameter parameter)
+    {
         WebSocketData.MethodSession method = new WebSocketData.MethodSession();
         method.method = methodName;
         method.@params = parameter;
