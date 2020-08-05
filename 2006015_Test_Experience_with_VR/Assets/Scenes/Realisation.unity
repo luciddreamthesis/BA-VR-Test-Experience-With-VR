@@ -552,8 +552,6 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: 4170474096689127764, guid: c7bd48180e12e0d45b6062fcad6e960a, type: 2}
     value: {fileID: 1737687549}
-  - key: {fileID: 8733780343307708700, guid: c7bd48180e12e0d45b6062fcad6e960a, type: 2}
-    value: {fileID: 0}
   - key: {fileID: 8853314794534149670, guid: c7bd48180e12e0d45b6062fcad6e960a, type: 2}
     value: {fileID: 0}
   m_ExposedReferences:
@@ -639,6 +637,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4901160143867287935, guid: 5df45dcd5378d3f458790382a333d3c6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4901160143963424385, guid: 5df45dcd5378d3f458790382a333d3c6,
         type: 3}

@@ -9,7 +9,7 @@ public class instantiateRandomSpheres : MonoBehaviour
     void Start()
     {
        for(int i = 0;i<1000;i++){
-       		GameObject s = GameObject.Instantiate(sphere, new Vector3(Random.Range(-10f, 50f), Random.Range(-10f, 50f), Random.Range(-10f, 50f)), Quaternion.identity);
+       		GameObject s = GameObject.Instantiate(sphere, new Vector3(Random.Range(600f, 0f), Random.Range(0f, 0f), Random.Range(0f, 0f)), Quaternion.identity);
        } 
     }
 
