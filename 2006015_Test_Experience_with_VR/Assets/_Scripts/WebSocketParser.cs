@@ -7,6 +7,9 @@ using System.IO;
 using DigitalRuby.Tween;
 public class WebSocketParser : MonoBehaviour
 {
+    //Play Sound
+    public AudioSource playSoundUp;
+    public AudioSource playSoundDown;
 
     public WebSocket ws;
 
@@ -14,32 +17,34 @@ public class WebSocketParser : MonoBehaviour
     public OnConnected OnConnect;
     private float x = 0.0f;
     private float lastFocusValue = 0;
-    private string auth; // = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6ImNvbS5taW1pLnlvcmQubHVjaWQtZHJlYW0iLCJhcHBWZXJzaW9uIjoiMS4wIiwiZXhwIjoxNTkyMDMyNDcyLCJuYmYiOjE1OTE3NzMyNzIsInVzZXJJZCI6ImFhN2E2NDI2LTUxMTAtNDc4Yy04OTFhLWYwMzlmZTlhNmEyNCIsInVzZXJuYW1lIjoibWltaS55b3JkIiwidmVyc2lvbiI6IjIuMCJ9.QNiWXsslXYqaK3wJ/aSTO6geF35jckzgJWWPC/h3AFA=";
+    private string auth;
 
     private Queue responseData;
 
-    //public GameObject sphereInterest;
-    //public GameObject sphereStress;
-    //public GameObject sphereRelax;
-    //public GameObject sphereExcitement;
-    //public GameObject sphereEngagement;
-    //public GameObject sphereLongTermExcitement;
+    
     public GameObject sphereFocus;
 
+    //Target Position  for Player
     public Transform Target;
+
+    //Start Position for Player
+    public Transform StartPoint;
+
+
     float speed = 1.0f;
 
 
-    //public bool isMoving = false;
+   
     public string cortexToken;
 
     public float step = 4;
     float distPerStep = 1f;
     public float timePerStep = 5f;
+    public float timePerStepBack = 5f;
 
-    //public CSVExporter csvExporter;
+    
 
-    // Use this for initialization
+    // Use this for authentification 
     public void Main()
     {
 
@@ -50,7 +55,6 @@ public class WebSocketParser : MonoBehaviour
         wsUri.Host = "localhost";
         wsUri.Port = 6868;
         wsUri.Scheme = "wss";
-        // wsUri.Path = "/";
 
         var url = wsUri.Uri;
 
@@ -98,24 +102,29 @@ public class WebSocketParser : MonoBehaviour
 
             if (!String.IsNullOrEmpty(responseRaw.result.id))
             {
-                // string sessionId = responseRaw.result.id;
                 Debug.Log("session id is: " + responseRaw.result.id);
                 Subscribe("met", cortexToken, responseRaw.result.id);
-                //  Subscribe("met", cortexToken, responseRaw.result.id);
+                
             }
 
-            //if(response.mot.Count>0){
-            //sphere.transform.position = new Vector3(float.Parse(response.mot[7]), float.Parse(response.mot[8]), float.Parse(response.mot[9]));
-            //}
-            Debug.Log(response.met[18]);
+            
+            Debug.Log("Response.Met: " + response.met[18]);
 
 
             float newFocus = float.Parse(response.met[18]);
 
             Debug.Log("newFocus: " + newFocus);
+
             if (newFocus > 100000)
             {
-                
+
+                Debug.Log("Up");
+
+
+                //play sound
+                playSoundUp.Play();
+
+                //animate
                 Vector3 startPos = sphereFocus.transform.position;
 
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
@@ -135,12 +144,33 @@ public class WebSocketParser : MonoBehaviour
             }
 
             
-            else 
+            else if (newFocus == null)
             {
-             
-                Debug.Log("focus down" + newFocus);
+
+                Debug.Log("no data");
             }
             // csvExporter.WriteEEGData(response);
+
+            else
+            {
+                Debug.Log("Down: " + newFocus);
+
+                //play sound
+                playSoundDown.Play();
+
+                Vector3 startPos = sphereFocus.transform.position;
+                Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, StartPoint.position, distPerStep);
+
+                System.Action<ITween<Vector3>> sphereMovement = (t) =>
+                {
+                    sphereFocus.transform.position = t.CurrentValue;
+                };
+
+                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStepBack, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
+                lastFocusValue = newFocus;
+
+            }
+
         }
     }
 
