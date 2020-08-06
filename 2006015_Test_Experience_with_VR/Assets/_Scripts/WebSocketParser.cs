@@ -112,10 +112,10 @@ public class WebSocketParser : MonoBehaviour
 
             float newFocus = float.Parse(response.met[18]);
 
-
-            if (newFocus > 0.1)
+            Debug.Log("newFocus: " + newFocus);
+            if (newFocus > 100000)
             {
-                Debug.Log("animation start");
+                
                 Vector3 startPos = sphereFocus.transform.position;
 
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
@@ -131,7 +131,7 @@ public class WebSocketParser : MonoBehaviour
                 // completion defaults to null if not passed in
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
                 lastFocusValue = newFocus;
-                Debug.Log("animation stops");
+              
             }
 
             
