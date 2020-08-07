@@ -7,7 +7,7 @@ public class StartController : MonoBehaviour
   public Transform TargetPoint;
   public bool isMoving = false;
 
-  float speed = 6f;
+  float speed = 4f;
     // Start is called before the first frame update
     void Start()
     {

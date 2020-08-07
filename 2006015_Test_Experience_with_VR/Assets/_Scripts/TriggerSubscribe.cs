@@ -5,6 +5,7 @@ using UnityEngine;
 public class TriggerSubscribe : MonoBehaviour
 {
     public GameObject cubeObject;
+    public AudioSource SwitchOnWEbsocket;
     //public bool activateme;
 
     void Start ()
@@ -18,5 +19,8 @@ public class TriggerSubscribe : MonoBehaviour
       
             Debug.Log("Player");
         cubeObject.SetActive(true);
+        SwitchOnWEbsocket.Play();
+
+
     }
 }

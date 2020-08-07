@@ -5,11 +5,15 @@ using UnityEngine;
 public class NewMoonApperience : MonoBehaviour
 {
     public GameObject moonObject;
+    public AudioSource NotificationLevel2;
+ 
+
     //public bool activateme;
 
     void Start()
     {
         moonObject.SetActive(false);
+        
 
     }
 
@@ -18,6 +22,10 @@ public class NewMoonApperience : MonoBehaviour
 
         Debug.Log("Moon");
         moonObject.SetActive(true);
+
+        NotificationLevel2.Play();
+        
+
     }
 }
 

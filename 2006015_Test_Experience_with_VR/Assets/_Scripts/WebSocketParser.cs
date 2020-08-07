@@ -10,6 +10,7 @@ public class WebSocketParser : MonoBehaviour
     //Play Sound
     public AudioSource playSoundUp;
     public AudioSource playSoundDown;
+    public AudioSource playSoundNoData;
 
     public WebSocket ws;
 
@@ -107,13 +108,21 @@ public class WebSocketParser : MonoBehaviour
                 
             }
 
-            
-            Debug.Log("Response.Met: " + response.met[18]);
 
+            // Debug.Log("Response.Met: " + response.met[18]);
 
-            float newFocus = float.Parse(response.met[18]);
+            float newFocus = 0;
 
-            Debug.Log("newFocus: " + newFocus);
+            if (
+                response.met.Count > 18 &&
+                response.met[18] != null
+            )
+
+            {
+                newFocus = float.Parse(response.met[18]);
+            }
+
+               
 
             if (newFocus > 100000)
             {
@@ -144,10 +153,14 @@ public class WebSocketParser : MonoBehaviour
             }
 
             
-            else if (newFocus == null)
+            else if (newFocus == 0)
             {
 
                 Debug.Log("no data");
+
+                //play sound
+                playSoundNoData.Play();
+
             }
             // csvExporter.WriteEEGData(response);
 
