@@ -38,7 +38,7 @@ public class WebSocketParser : MonoBehaviour
    
     public string cortexToken;
 
-    public float step = 4;
+    public float step = 1;
     float distPerStep = 1f;
     public float timePerStep = 5f;
     public float timePerStepBack = 5f;
@@ -112,11 +112,13 @@ public class WebSocketParser : MonoBehaviour
             // Debug.Log("Response.Met: " + response.met[18]);
 
             float newFocus = 0;
+  
 
             if (
                 response.met.Count > 18 &&
                 response.met[18] != null
             )
+
 
             {
                 newFocus = float.Parse(response.met[18]);
@@ -124,10 +126,10 @@ public class WebSocketParser : MonoBehaviour
 
                
 
-            if (newFocus > 100000)
+            if (newFocus > 200000)
             {
 
-                Debug.Log("Up");
+                Debug.Log("Up: "+ newFocus);
 
 
                 //play sound
@@ -149,6 +151,7 @@ public class WebSocketParser : MonoBehaviour
                 // completion defaults to null if not passed in
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
                 lastFocusValue = newFocus;
+
               
             }
 
@@ -159,7 +162,7 @@ public class WebSocketParser : MonoBehaviour
                 Debug.Log("no data");
 
                 //play sound
-                playSoundNoData.Play();
+                //playSoundNoData.Play();
 
             }
             // csvExporter.WriteEEGData(response);

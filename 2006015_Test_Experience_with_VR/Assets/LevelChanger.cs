@@ -10,7 +10,7 @@ public class LevelChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Invoke("goToSecondScene", 90);
+        Invoke("goToSecondScene", 70);
     }
 
     public void goToSecondScene ()
