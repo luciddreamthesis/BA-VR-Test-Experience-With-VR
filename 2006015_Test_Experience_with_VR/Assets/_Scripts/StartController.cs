@@ -19,7 +19,7 @@ public class StartController : MonoBehaviour
 
     {
       var step = speed * Time.deltaTime;
-        if(isMoving);
+        if(isMoving)
         {
           transform.position =  Vector3.MoveTowards (transform.position, TargetPoint.position, step);
         }
