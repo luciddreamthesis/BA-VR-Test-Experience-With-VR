@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class instantiateRandomSpheres : MonoBehaviour
 {
-    public GameObject sphere;
+    public GameObject star2;
     // Start is called before the first frame update
     void Start()
     {
-       for(int i = 0;i<100000;i++){
-       		GameObject s = GameObject.Instantiate(sphere, new Vector3(Random.Range(600f, 0f), Random.Range(600f, 0f), Random.Range(600f, 0f)), Quaternion.identity);
-       } 
+       for(int i = 0;i<1000;i++){
+       		GameObject s = GameObject.Instantiate(star2, new Vector3(Random.Range(-50f, 60f), Random.Range(-50f, 200f), Random.Range(-200f, 50f)), Quaternion.identity);
+        } 
     }
 
     // Update is called once per frame
