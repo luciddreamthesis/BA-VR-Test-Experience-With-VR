@@ -116,15 +116,24 @@ public class WebSocketParser : MonoBehaviour
 
             if (
                 response.met.Count > 18 &&
-                response.met[18] != null
+                response.met[18] != null &&
+                response.met[18] != ""
             )
-
-
             {
+                Debug.Log("response value" + response.met[18].GetType());
+
                 newFocus = float.Parse(response.met[18]);
             }
+            else if (
+                response.met.Count > 18 &&
+                response.met[18] != null &&
+                response.met[18] == ""
+                )
+            {
+                newFocus = 0;
+            }
 
-               
+            Debug.Log("new focus" + newFocus);
 
             if (newFocus > 200000)
             {
