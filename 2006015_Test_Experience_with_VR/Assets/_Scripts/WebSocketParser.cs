@@ -21,8 +21,8 @@ public class WebSocketParser : MonoBehaviour
     private string auth;
 
     private Queue responseData;
-
     
+
     public GameObject sphereFocus;
 
     //Target Position  for Player
@@ -34,6 +34,12 @@ public class WebSocketParser : MonoBehaviour
 
     float speed = 1.0f;
 
+    // LateUpdate Timer
+    //float lateTimer = 1;
+
+    //LateUpdate int
+    //int totalLateCallsPerSecond;
+    //int totalLateUpdateCallsPerSecond;
 
    
     public string cortexToken;
@@ -84,6 +90,18 @@ public class WebSocketParser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       // totalLateUpdateCallsPerSecond++;
+       // lateTimer -= Time.deltaTime;
+
+       // if (lateTimer <= 0)
+       // {
+       //     print("Late Updates: " + totalLateCallsPerSecond);
+
+       //     totalLateUpdateCallsPerSecond = 3;
+
+       //     lateTimer = 1;
+       // }
+
         if (responseData.Count > 0)
         {
             var line = "";
@@ -160,8 +178,7 @@ public class WebSocketParser : MonoBehaviour
                 // completion defaults to null if not passed in
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
                 lastFocusValue = newFocus;
-
-              
+                
             }
 
             
@@ -193,7 +210,7 @@ public class WebSocketParser : MonoBehaviour
 
                 sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStepBack, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
                 lastFocusValue = newFocus;
-
+                
             }
 
         }
