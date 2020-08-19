@@ -49,11 +49,15 @@ public class WebSocketParser : MonoBehaviour
     public float timePerStep = 5f;
     public float timePerStepBack = 5f;
 
+    public bool CanUpdate;
+    public bool CanNotUpdate;
+
     
 
     // Use this for authentification 
     public void Main()
     {
+
 
         responseData = new Queue();
 
@@ -85,6 +89,8 @@ public class WebSocketParser : MonoBehaviour
 
         float distance = Vector3.Distance(Target.position, sphereFocus.transform.position);
         distPerStep = distance / step;
+
+      
     }
 
     // Update is called once per frame
@@ -130,7 +136,8 @@ public class WebSocketParser : MonoBehaviour
             // Debug.Log("Response.Met: " + response.met[18]);
 
             float newFocus = 0;
-  
+
+            
 
             if (
                 response.met.Count > 18 &&
@@ -151,9 +158,11 @@ public class WebSocketParser : MonoBehaviour
                 newFocus = 0;
             }
 
+
+            
             Debug.Log("new focus" + newFocus);
 
-            if (newFocus > 200000)
+            if (newFocus > 300000)
             {
 
                 Debug.Log("Up: "+ newFocus);
@@ -162,24 +171,34 @@ public class WebSocketParser : MonoBehaviour
                 //play sound
                 playSoundUp.Play();
 
-                //animate
-                Vector3 startPos = sphereFocus.transform.position;
+                CanNotUpdate = true;
 
-                Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
-
-
-
-                System.Action<ITween<Vector3>> sphereMovement = (t) =>
+                if (CanNotUpdate)
                 {
-                    sphereFocus.transform.position = t.CurrentValue;
-                };
+                    Debug.Log ("CanNotUpdate ");
+
+                    //animate
+                    Vector3 startPos = sphereFocus.transform.position;
+
+                    Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
 
 
-                // completion defaults to null if not passed in
-                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
-                lastFocusValue = newFocus;
-                
+
+                    System.Action<ITween<Vector3>> sphereMovement = (t) =>
+                    {
+                        sphereFocus.transform.position = t.CurrentValue;
+                    };
+
+
+                    // completion defaults to null if not passed in
+                    sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.Linear, sphereMovement);
+                    lastFocusValue = newFocus;
+
+                }
+
             }
+
+
 
             
             else if (newFocus == 0)
@@ -208,7 +227,7 @@ public class WebSocketParser : MonoBehaviour
                     sphereFocus.transform.position = t.CurrentValue;
                 };
 
-                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStepBack, TweenScaleFunctions.CubicEaseInOut, sphereMovement);
+                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStepBack, TweenScaleFunctions.Linear, sphereMovement);
                 lastFocusValue = newFocus;
                 
             }
