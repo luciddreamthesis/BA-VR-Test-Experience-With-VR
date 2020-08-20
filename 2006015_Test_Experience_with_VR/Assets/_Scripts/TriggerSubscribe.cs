@@ -6,6 +6,7 @@ public class TriggerSubscribe : MonoBehaviour
 {
     public GameObject cubeObject;
     public AudioSource SwitchOnWEbsocket;
+    public AudioSource EnjoyRide;
     //public bool activateme;
 
     void Start ()
@@ -18,8 +19,13 @@ public class TriggerSubscribe : MonoBehaviour
     {
       
             Debug.Log("Player");
+
+        //Sound Switch on
         cubeObject.SetActive(true);
-        SwitchOnWEbsocket.Play();
+
+
+        //Sound Voice Over
+        EnjoyRide.Play();
 
 
     }
