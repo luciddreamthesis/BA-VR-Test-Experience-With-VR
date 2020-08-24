@@ -5,12 +5,22 @@ using WebSocketSharp;
 using System;
 using System.IO;
 using DigitalRuby.Tween;
+using Random = UnityEngine.Random;
 public class WebSocketParser : MonoBehaviour
 {
     //Play Sound
-    public AudioSource playSoundUp;
-    public AudioSource playSoundDown;
     public AudioSource playSoundNoData;
+
+    //Play Random Sound Down
+    private AudioSource DownSource;
+    public AudioClip[] DownClips;
+
+    //Play Random Sound Up
+    private AudioSource UpSource;
+    public AudioClip[] UpClips;
+
+    //Play on Delay if Play
+
 
     public WebSocket ws;
 
@@ -58,6 +68,9 @@ public class WebSocketParser : MonoBehaviour
     public void Main()
     {
 
+        //Sound
+        DownSource = gameObject.AddComponent<AudioSource>();
+        UpSource = gameObject.AddComponent<AudioSource>();
 
         responseData = new Queue();
 
@@ -136,7 +149,7 @@ public class WebSocketParser : MonoBehaviour
             // Debug.Log("Response.Met: " + response.met[18]);
 
             float newFocus = 0;
-
+            
             
 
             if (
@@ -155,69 +168,62 @@ public class WebSocketParser : MonoBehaviour
                 response.met[18] == ""
                 )
             {
-                newFocus = 0;
+                newFocus = 1000;
             }
 
 
             
             Debug.Log("new focus" + newFocus);
 
-            if (newFocus > 300000)
+            if (newFocus > 100000)
             {
 
                 Debug.Log("Up: "+ newFocus);
 
 
                 //play sound
-                playSoundUp.Play();
+                StartCoroutine(WaitForPlayUp());
 
-                CanNotUpdate = true;
+                //animate
+                Vector3 startPos = sphereFocus.transform.position;
 
-                if (CanNotUpdate)
+                Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
+
+
+
+                System.Action<ITween<Vector3>> sphereMovement = (t) =>
                 {
-                    Debug.Log ("CanNotUpdate ");
-
-                    //animate
-                    Vector3 startPos = sphereFocus.transform.position;
-
-                    Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
+                    sphereFocus.transform.position = t.CurrentValue;
+                };
 
 
+                // completion defaults to null if not passed in
+                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.Linear, sphereMovement);
+                lastFocusValue = newFocus;
 
-                    System.Action<ITween<Vector3>> sphereMovement = (t) =>
-                    {
-                        sphereFocus.transform.position = t.CurrentValue;
-                    };
-
-
-                    // completion defaults to null if not passed in
-                    sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.Linear, sphereMovement);
-                    lastFocusValue = newFocus;
-
-                }
 
             }
 
 
 
             
-            else if (newFocus == 0)
+            else if (newFocus == 1000)
             {
 
                 Debug.Log("no data");
 
                 //play sound
-                //playSoundNoData.Play();
+                playSoundNoData.Play();
 
             }
             // csvExporter.WriteEEGData(response);
 
-            else
+            else if (newFocus <= 100000 && newFocus >=1000)
             {
                 Debug.Log("Down: " + newFocus);
 
                 //play sound
-                playSoundDown.Play();
+                StartCoroutine(WaitForPlayDown());
 
                 Vector3 startPos = sphereFocus.transform.position;
                 Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, StartPoint.position, distPerStep);
@@ -233,7 +239,35 @@ public class WebSocketParser : MonoBehaviour
             }
 
         }
+
     }
+
+    IEnumerator WaitForPlayDown()
+    {
+
+        yield return new WaitForSeconds(1);
+        PlayRandomSoundDown();
+    }
+
+    public void PlayRandomSoundDown()
+    {
+        int selection = Random.Range(0, DownClips.Length);
+        DownSource.PlayOneShot(DownClips[selection]);
+    }
+
+    IEnumerator WaitForPlayUp()
+    {
+
+        yield return new WaitForSeconds(5);
+        PlayRandomSoundUp();
+    }
+
+    public void PlayRandomSoundUp()
+    {
+        int selection = Random.Range(0, UpClips.Length);
+        UpSource.PlayOneShot(UpClips[selection]);
+    }
+
 
     void Authorize()
     {
