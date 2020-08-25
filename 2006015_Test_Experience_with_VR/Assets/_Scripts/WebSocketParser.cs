@@ -175,7 +175,7 @@ public class WebSocketParser : MonoBehaviour
             
             Debug.Log("new focus" + newFocus);
 
-            if (newFocus > 100000)
+            if (newFocus > 300000)
             {
 
                 Debug.Log("Up: "+ newFocus);
@@ -218,7 +218,7 @@ public class WebSocketParser : MonoBehaviour
             }
             // csvExporter.WriteEEGData(response);
 
-            else if (newFocus <= 100000 && newFocus >=1000)
+            else if (newFocus <= 300000 && newFocus >=1000)
             {
                 Debug.Log("Down: " + newFocus);
 
