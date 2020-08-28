@@ -27,7 +27,7 @@ public class SoundNotifiactionLevel3 : MonoBehaviour
     IEnumerator WaitForSound()
     {
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
         PlaySound();
     }
 

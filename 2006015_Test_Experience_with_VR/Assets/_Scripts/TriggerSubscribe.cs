@@ -42,7 +42,7 @@ public class TriggerSubscribe : MonoBehaviour
     }
     IEnumerator WaitForPlay()
     {
-        yield return new WaitForSeconds(15);
+        yield return new WaitForSeconds(5);
         PlaySound();
     }
     public void PlaySound()

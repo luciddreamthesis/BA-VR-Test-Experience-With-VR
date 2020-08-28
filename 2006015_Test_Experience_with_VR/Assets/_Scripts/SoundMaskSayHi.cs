@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SoundMaskSayHi : MonoBehaviour
 {
-    public AudioSource MaskHi;
+    private AudioSource HiSource;
+    public AudioClip[] HiClips;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        HiSource = gameObject.AddComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -16,8 +18,19 @@ public class SoundMaskSayHi : MonoBehaviour
     {
 
         Debug.Log("MaskSayHi");
-        MaskHi.Play();
+        StartCoroutine(WaitForPlayHi());
+    }
 
+    IEnumerator WaitForPlayHi()
+    {
 
+        yield return new WaitForSeconds(3);
+        PlayRandomSoundHi();
+    }
+
+    public void PlayRandomSoundHi()
+    {
+        int selection = Random.Range(0, HiClips.Length);
+        HiSource.PlayOneShot(HiClips[selection]);
     }
 }

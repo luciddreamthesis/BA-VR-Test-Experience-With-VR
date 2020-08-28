@@ -213,7 +213,25 @@ public class WebSocketParser : MonoBehaviour
                 Debug.Log("no data");
 
                 //play sound
-                playSoundNoData.Play();
+                //playSoundNoData.Play();
+
+
+                //animate
+                Vector3 startPos = sphereFocus.transform.position;
+
+                Vector3 endPos = Vector3.MoveTowards(sphereFocus.transform.position, Target.position, distPerStep);
+
+
+
+                System.Action<ITween<Vector3>> sphereMovement = (t) =>
+                {
+                    sphereFocus.transform.position = t.CurrentValue;
+                };
+
+
+                // completion defaults to null if not passed in
+                sphereFocus.gameObject.Tween("SphereMovement", startPos, endPos, timePerStep, TweenScaleFunctions.Linear, sphereMovement);
+                lastFocusValue = newFocus;
 
             }
             // csvExporter.WriteEEGData(response);
